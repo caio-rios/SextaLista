@@ -62,4 +62,55 @@ OLS significa Ordinary Least Square ou Mínimos Quadrados Ordinários. Ela consi
 
 ## a) File name;
 
+vote_growth.R
 
+## b) Identifiers;
+
+Nome da Variável: avg.vote 
+Nome da função: CalculateAvgVotes
+
+## c) Identation;
+
+Nunca usar tab para deixar separar o texto. Sempre dois espaços.
+
+## d) Spacing; 
+
+Sempre separa os argumentos da função por espaço
+
+
+valor <- 5 + 7 - sqrt(220)
+
+## e) Assignment;
+
+x <- 5
+
+
+## f) Commenting Guidelines;
+
+```{r}
+# Seperar o # do comentário com um espaço
+
+x <- 2 + 2 * 15  # Comentário após linha de código
+```
+
+## g) Function Definitions and Calls; 
+
+PredictCTR <- function(arg1, arg2, arg3,
+                       defaultArg = TRUE)
+
+## h) Function Documentation; 
+
+Logo abaico da função de conter o comentário sobre o que está sendo calculado com a função. Depois explicar os argumentos abaixo da sessção criada #Arg:. Depois uma descrição do resultado
+
+# 9. Leia o Capítulo 7 do livro R para Ciência de Dados (http://r4ds.had.co.nz/exploratory-data-analysis.html) e entregue script no R que reproduza os exemplos apresentados no capítulo. Comente seu código indicando o que está para ser realizado em cada etapa do seu script. 
+
+```{r, echo=FALSE}
+library(knitr)
+library(dplyr)
+library(tidyverse)
+library(magrittr)
+library(ggplot2)
+
+```
+
+Visualizando distribuições
