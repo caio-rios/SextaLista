@@ -110,7 +110,347 @@ library(dplyr)
 library(tidyverse)
 library(magrittr)
 library(ggplot2)
+theme_set(theme_classic())
+```
+
+## Variações
+
+Visualizando distribuições a partir de gráfico de barra para variáveis categóricas.
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut))
+```
+
+
+Mostrando os valores de cada barra
+
+
+```{r}
+kable(diamonds %>% 
+  count(cut))
+```
+
+Visualizando distribuições a partir de histogramas para variáveis contínuas
+
+
+```{r}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = carat), binwidth = 0.5)
+```
+
+Mostrando os valores de cada "barra" em blocos de 0,5
+
+
+```{r}
+kable(diamonds %>% 
+  count(cut_width(carat, 0.5)))
+```
+
+É importante olhar a distribuição em diferentes "bandwidths" variável de interesse. Vamos observar como a distribuição muda ao olharmos apenas os diamantes com carat < 3
+
+
+```{r}
+smaller <- diamonds %>% 
+  filter(carat < 3)
+ggplot(data = smaller, mapping = aes(x = carat)) +
+  geom_histogram(binwidth = 0.1)
+```
+
+
+Para comparar múltiplos histogramas, utilizar geom_freqpoly.
+
+
+```{r}
+ggplot(data = smaller, mapping = aes(x = carat, colour = cut)) +
+  geom_freqpoly(binwidth = 0.1)
+```
+
+Plotando um histograma de carat para observar fatores interessantes dos dados. Como a quantidade de diamantes com carat inteiro.
+
+
+```{r}
+ggplot(data = smaller, mapping = aes(x = carat)) +
+  geom_histogram(binwidth = 0.01)
+```
+
+Plotando outro histograma para observar como os dados se comportam. Neste caso, observam-se dois clusters.
+
+
+```{r}
+ggplot(data = faithful, mapping = aes(x = eruptions)) + 
+  geom_histogram(binwidth = 0.25)
+```
+
+Quando há valores extremos ou outliers, o histograma inteiro fica concentrado em umas parte do eixo x como mostrado no exemplo abaixo.
+
+
+```{r}
+ggplot(diamonds) + 
+  geom_histogram(mapping = aes(x = y), binwidth = 0.5)
+```
+
+Não conseguimos ver os valores para além de y=10 pois existem muitas observações no início da variável. Se limitarmos o eixo y para plotar apenas os valores menores do que 60, poderemos ver esses valores raros.
+
+
+```{r}
+ggplot(diamonds) + 
+  geom_histogram(mapping = aes(x = y), binwidth = 0.5) +
+  coord_cartesian(ylim = c(0, 50))
+```
+
+Observa-se que existem três valores raros próximo a 0, 30 e 60´. Para observá-los utilizamos o seguinte código.
+
+
+```{r}
+unusual <- diamonds %>% 
+  filter(y < 3 | y > 20) %>% 
+  select(price, x, y, z) %>%
+  arrange(y)
+kable(unusual)
+```
+
+## Missing Values
+
+Para melhor observar a distribuição, podemos retirar da base os valores raros.
+
+
+```{r}
+diamonds2 <- diamonds %>% 
+  filter(between(y, 3, 20))
+```
+
+É mais recomendado substituir os valores raros por NA.
+
+
+```{r}
+diamonds2 <- diamonds %>% 
+  mutate(y = ifelse(y < 3 | y > 20, NA, y))
+```
+
+Ao plotar essa nova base, o ggplot2 remove os NAs mas, pelo menos avisa quantos dados foram removidos.
+
+
+```{r}
+ggplot(data = diamonds2, mapping = aes(x = x, y = y)) + 
+  geom_point()
+```
+
+Nem sempre NA significa missing values. No exemplo abaixo, a base registra os voos feitos e NA significa voos cancelados. Para observá-los podemos utilizar a função is.na.
+
+
+```{r}
+library(nycflights13)
+nycflights13::flights %>% 
+  mutate(
+    cancelled = is.na(dep_time),
+    sched_hour = sched_dep_time %/% 100,
+    sched_min = sched_dep_time %% 100,
+    sched_dep_time = sched_hour + sched_min / 60
+  ) %>% 
+  ggplot(mapping = aes(sched_dep_time)) + 
+  geom_freqpoly(mapping = aes(colour = cancelled), binwidth = 1/4)
+```
+
+## Covariação
+
+### Variáveis Categóricas e Ordinais
+
+Analisando covariação entre variáveis categóricas e contínuas. Vamos observar a covariação do preço do diamante e a qualidade. 
+
+
+```{r}
+ggplot(data = diamonds, mapping = aes(x = price)) + 
+  geom_freqpoly(mapping = aes(colour = cut), binwidth = 500)
+```
+
+Difícil observar pois a quantidade varia muito.
+
+
+```{r}
+ggplot(diamonds) + 
+  geom_bar(mapping = aes(x = cut))
+```
+
+Vamos trocar o y pela densidade ao em vez de contagem.
+
+
+```{r}
+ggplot(data = diamonds, mapping = aes(x = price, y = ..density..)) + 
+  geom_freqpoly(mapping = aes(colour = cut), binwidth = 500)
+```
+
+Outra maneira de observar essa relação é por boxplot.
+
+
+```{r}
+ggplot(data = diamonds, mapping = aes(x = cut, y = price)) +
+  geom_boxplot()
+```
+
+Vamos observar agora uma variável categórica que não é ordinal.
+
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) +
+  geom_boxplot()
+```
+
+Para melhorar a visualização podemos reordenar o eixo x.
+
+
+```{r}
+ggplot(data = mpg) +
+  geom_boxplot(mapping = aes(x = reorder(class, hwy, 
+                                         FUN = median), 
+                             y = hwy))
+```
+
+Caso o nome das variáveis sejam longas, podemos inverter os eixos.
+
+
+```{r}
+ggplot(data = mpg) +
+  geom_boxplot(mapping = aes(x = reorder(class, hwy, 
+                                         FUN = median), 
+                             y = hwy)) +
+  coord_flip()
+```
+
+### Duas variáveis categóricas
+
+Para observar duas variáveis categóricas precisamos contar o número de observações para cada categoria.
+
+
+```{r}
+ggplot(data = diamonds) +
+  geom_count(mapping = aes(x = cut, y = color))
+```
+
+Cada círculo mostra quantas ocorrências combinadas houveram.
+
+Podemos, também, calcular cada ocorrência combinada com dplyr.
+
+```{r}
+kable(diamonds %>% 
+  count(color, cut))
+```
+
+
+Outra maneira seria com uma especie de mapa de calor. O geom_tile.
+
+```{r}
+diamonds %>% 
+  count(color, cut) %>%  
+  ggplot(mapping = aes(x = color, y = cut)) +
+  geom_tile(mapping = aes(fill = n))
+```
+
+
+### Duas variáveis contínuas
+
+Para duas variáveis contínuas podemos observar um gráfico de dispersão de pontos.
+
+```{r}
+ggplot(data = diamonds) +
+  geom_point(mapping = aes(x = carat, y = price))
+```
+
+
+Esse gráficos se tornam menos úteis quanto maior for a quantidade de dados. Podemos adicionar transparência aos pontos para o gráfico ficar mais interessante.
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_point(mapping = aes(x = carat, y = price), 
+             alpha = 1 / 100)
+```
+
+
+Uma maneira mais interessante ainda de observar grandes bases de dados é utilizar o geom_bin2d e o geom_hex. Com ele, os pontos que se sobrepões recebem cores diferentes.
+
+```{r}
+ggplot(data = smaller) +
+  geom_bin2d(mapping = aes(x = carat, y = price))
+
+library("hexbin")
+
+ggplot(data = smaller) +
+  geom_hex(mapping = aes(x = carat, y = price))
 
 ```
 
-Visualizando distribuições
+Podemos, ainda, tratar uma variável contínua como uma categórica e plotar boxplots. Com o cut_width podemos agrupar os dados.
+
+```{r}
+ggplot(data = smaller, mapping = aes(x = carat, y = price)) + 
+  geom_boxplot(mapping = aes(group = cut_width(carat, 0.1)))
+```
+
+
+Podemos também plotar em cada boxplot o mesmo número de pontos.
+
+```{r}
+ggplot(data = smaller, mapping = aes(x = carat, y = price)) + 
+  geom_boxplot(mapping = aes(group = cut_number(carat, 20)))
+```
+
+## Padrões e Modelos
+
+Padrões podem ser visualizados ao plotar os nossos dados. Neste exemplo, claramente observa-se dois clusters.
+
+```{r}
+ggplot(data = faithful) + 
+  geom_point(mapping = aes(x = eruptions, y = waiting))
+```
+
+As vezes é difícil entender a relação entre duas variáveis, pois outra variável pode está correlacionada com ambas, variáveis de interesse. Um exemplo disso é a relação entre a qualidade do diamente e o preço pois a variável peso está relacionada tanto com o preço quanto com a qualidade do diamante. Podemos retirar a relação entre peso e preço do diamante ao substituímos essa relação pelo seu resíduo. Com os resíduos podemos observar o preço do diamante sem o efeito do peso dele.
+
+```{r}
+library(modelr)
+
+mod <- lm(log(price) ~ log(carat), data = diamonds)
+
+diamonds2 <- diamonds %>% 
+  add_residuals(mod) %>% 
+  mutate(resid = exp(resid))
+
+ggplot(data = diamonds2) + 
+  geom_point(mapping = aes(x = carat, y = resid))
+```
+
+
+Uma vez retirada essa relação do peso com o preço, podemos de fato observar a relação entre qualidade e preço dos diamentes.
+
+```{r}
+ggplot(data = diamonds2) + 
+  geom_boxplot(mapping = aes(x = cut, y = resid))
+```
+
+# 10. Com os dados disponibilizados na plataforma (vote_growth_usa.RData), reproduza os resultados do livro Kellstedt, P. M., & Whitten, G. D. (2013) utilizando o código apresentado nos slides da aula.
+
+```{r}
+load("vote_growth_usa.RData")
+reg <- lm(Vote ~ Growth, data = bd) 
+summary(reg)
+```
+
+# 11.  Com os dados e as variáveis do exercício 10, realize uma análise de regressão considerando apenas o período de 1876 a 1932. Apresente os resultados e os compare quanto ao modelo completo (exercício 10) em relação a:
+
+```{r}
+bd_select <- bd[1:15, ]
+reg2 <- lm(Vote ~ Growth, data = bd_select) 
+summary(reg2)
+```
+
+## a) Significância estatística dos resultados;
+
+O nível de significância estatística medido pelo p-valor diminui do primeiro modelo (completo) para o segundo (1876-1932). No primeiro, o efeito de crescimento no comparecimento eleitoral foi de 0,62 com p-valor menor que 0,000. Já no segundo, o efeito foi menor, de 0,53 com p-valor de 0,042.
+
+## b) Intervalo de confiança para \(\beta\);
+
+O intervalo de confiança é o Growth estimado (0,5336) mais ou menos o t valor * o erro padrão. Como em ambos os casos o intervalo não passa pelo 0, os dois modelos passam no nível de significância de 95% com p-valor menor que 0,05.
+
+## c) Medidas de ajuste do modelo;
+
+O ajuste do modelo é medido pelo R².  O primeiro modelo é melhor ajustado do que o segundo pois o R² dele foi de 0,3291, enquanto do segundo foi de 0,2811. O R² ajustado é uma medida mais precisa pois não é tão sensível a quantidade de variáveis existente no modelo, sendo assim, uma medida melhor para comparar modelos diferentes. Analisando o R² ajustado, o primeiro modelo (0,3081) ainda é melhor do que o segundo modelo (0,2258).
+
