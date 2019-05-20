@@ -23,8 +23,9 @@ A variável independente consiste no fenômeno que explica a variação da vari�
 
 Se alguém, por exemplo, deseja explicar o porquê em alguns lugares a taxa de comparecimento é maior (ou menor) o pesquisador precisa pensar no que estaria causando essa variação de comparecimento. Uma hipótese seria que a competição política influencia na decisão do eleitor de comparecer às urnas. Neste exemplo, competição política explica comparecimento, logo competição política é minha variável independente e, por sua vez, o comparecimento eleitoral é sua variável dependente. A relação entre elas é de causação. VI causa VD. 
 
-#  Em análise de dados, qual o nome dado à equação abaixo?
+#  2. Em análise de dados, qual o nome dado à equação abaixo?
 
 $$
 Y = \alpha + \beta X + \mu
 $$
+Esta equação representa uma regressão bivariada.
