@@ -1,0 +1,30 @@
+---
+title: "Sexta Lista de Exercício"
+author: "Caio Rios"
+date: "19 de maio de 2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Descreva os conceitos abaixo:
+
+## a) Variável dependente:
+
+A variável dependente é o fenômeno que o pesquisador almeja explicar. Ela recebe este nome pois ela depende de outros fatores para existir ou para variar. Na literatura americana também é conhecida como "outcome".
+
+## b) Variável independente:
+
+A variável independente consiste no fenômeno que explica a variação da variável dependente. Ela recebe este nome pois ela independente de outras variáveis no modelos para acontecer. 
+
+## c) Apresente qual a relação existente entre variáveis independentes e dependente:
+
+Se alguém, por exemplo, deseja explicar o porquê em alguns lugares a taxa de comparecimento é maior (ou menor) o pesquisador precisa pensar no que estaria causando essa variação de comparecimento. Uma hipótese seria que a competição política influencia na decisão do eleitor de comparecer às urnas. Neste exemplo, competição política explica comparecimento, logo competição política é minha variável independente e, por sua vez, o comparecimento eleitoral é sua variável dependente. A relação entre elas é de causação. VI causa VD. 
+
+#  Em análise de dados, qual o nome dado à equação abaixo?
+
+$$
+Y = \alpha + \beta X + \mu
+$$
