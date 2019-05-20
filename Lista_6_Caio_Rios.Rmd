@@ -29,3 +29,37 @@ $$
 Y = \alpha + \beta X + \mu
 $$
 Esta equação representa uma regressão bivariada.
+
+# 3. Com suas palavras, apresente uma definição para cada um dos componentes da equação apresentada no exercício 2. 
+
+Y -> Valor observado da variável dependente.
+
+\(\alpha\) -> Intercepto. Isto é, o valor estimado de Y, quando os outros componentes se igualam a 0. Em um gráfico, seria o valor de Y quando X é 0.
+
+\(\beta\) -> Coeficiente de variação. O efeito de X em Y. Mais especificamente, seria o quanto Y varia ao acrescentar uma unidade da variável X. Calculado pela covariação de X e Y dividido pela variação de X ao quadrado.
+
+X -> Valor observado da variável independente.
+
+\(\mu\) -> Erro amostral ou componente estocástico. Seria o erro do modelo. A distância entre os valores observados e o modelo.
+
+# 4. Apresente o componente sistemático da equação apresentada no exercício 2. Descreva por quê é sistemático. 
+
+O componente sistemática da equação é \(\alpha + \beta X\). Este é o componente que vai predizer o valor estimado de Y.
+
+# 5. Apresente o componente estocástico da equação apresentada no exercício 2. Descreva por quê é estocástico.
+
+O componente estocástico da equação é \(\mu\). Este componente é aleatório e responde pela adequação do modelo aos dados reais. Ou seja o seu valor é indeterminado. A soma das distâncias dos pontos reais e o modeleo (reta de regressão) precisa se igualar a 0.
+
+# 6. Descreva a diferença entre Yi e Y (chapéu). Qual a relação desses dois componentes com \(\mu\)?
+
+Yi é o valor observado da variável dependente. E Y (chapéu) é o valor estimado de da variável dependente. Em um gráfico de linha com pontos, os pontos seriam Yi e os valores de Y que correspondem a reta seria o Y (chapéu). O Y (chapéu) não leva em conta o erro (\(\mu\)) para sua estimação, mas sim, apenas os componentes sistemáticos. Já Yi seria a soma de Y (chapéu) e \(\mu\).
+
+# 7. Com suas palavras, apresente o que é o modelo OLS e seu principal uso na análise de dados.
+
+OLS significa Ordinary Least Square ou Mínimos Quadrados Ordinários. Ela consiste na escolha da reta de regressão para representar o modelo. A escolha é dada pela soma dos quadrados da distância entre a reta (o modelo) e os valores observados de Y. A reta será aquela que minimiza esse valor.
+
+# 8. Com base no Google’s R Style Guide  (https://google.github.io/styleguide/Rguide.xml#indentation), apresente exemplos de boas práticas para os seguintes tópicos:
+
+## a) File name;
+
+
